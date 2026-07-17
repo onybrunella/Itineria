@@ -27,7 +27,7 @@ Ce projet est développé comme projet d'apprentissage personnel avec pour objec
 - **Migrations DB** : Hibernate en mode `update`
 - **Géocodage** : Nominatim
 
-## Stack
+## Prérequis
  
 Pour faire tourner ce projet en local, il faut avoir installé :
  

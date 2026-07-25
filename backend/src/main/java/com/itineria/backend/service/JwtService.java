@@ -24,4 +24,24 @@ public class JwtService {
                 .signWith(key)
                 .compact();
     }
+
+    public String extractEmail(String token) {
+        SecretKey key = Keys.hmacShaKeyFor(jwtSecret.getBytes());
+
+        return Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getSubject();
+    }
+
+    public boolean isTokenValid(String token) {
+        try {
+            extractEmail(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

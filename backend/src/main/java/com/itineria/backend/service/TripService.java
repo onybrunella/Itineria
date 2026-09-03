@@ -34,7 +34,7 @@ public class TripService {
     public Trip getTrip(Long tripId, User user) {
         var trip = tripRepository.findById(tripId)
                 .orElseThrow(() -> new IllegalArgumentException("Ce voyage n'existe pas."));
-        if (!trip.getUser().equals(user)) {
+        if (!Objects.equals(trip.getUser().getId(), user.getId())) {
             throw new AccessDeniedException("Vous n'avez pas accès à ce voyage.");
         }
         return trip;

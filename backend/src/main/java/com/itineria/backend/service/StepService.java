@@ -30,7 +30,7 @@ public class StepService {
 
     public Step createStep(Long tripId, User user, String locationName, Double latitude, Double longitude,
             LocalDate date, String note, Integer orderIndex) {
-        Trip trip = tripService.getTrip(tripId, user);
+        var trip = tripService.getTrip(tripId, user);
         var step = new Step(locationName, latitude, longitude, date, note, orderIndex);
         step.setTrip(trip);
 
@@ -38,7 +38,7 @@ public class StepService {
     }
 
     public List<Step> getStepsForTrip(Long tripId, User user) {
-        Trip trip = tripService.getTrip(tripId, user);
+        var trip = tripService.getTrip(tripId, user);
         return stepRepository.findByTripOrderByOrderIndexAsc(trip);
     }
 

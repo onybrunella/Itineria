@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.itineria.backend.dto.CreateTripRequest;
+import com.itineria.backend.dto.ItineraryResponse;
 import com.itineria.backend.dto.TripResponse;
 import com.itineria.backend.dto.UserInfo;
 import com.itineria.backend.entity.*;
@@ -24,10 +25,13 @@ import com.itineria.backend.service.*;
 public class TripController {
 
     private final TripService tripService;
+    private final StepService stepService;
 
-    public TripController(TripService tripService) {
+    public TripController(TripService tripService, StepService stepService) {
         Objects.requireNonNull(tripService);
         this.tripService = tripService;
+        Objects.requireNonNull(stepService);
+        this.stepService = stepService;
     }
 
     @PostMapping
@@ -40,7 +44,7 @@ public class TripController {
 
     @GetMapping
     public List<TripResponse> getUserTrips(Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
+        var user = (User) authentication.getPrincipal();
         var trips = tripService.getUserTrips(user);
         return trips.stream().map(this::toResponse).toList();
     }
@@ -50,6 +54,12 @@ public class TripController {
         User user = (User) authentication.getPrincipal();
         var trip = tripService.getTrip(id, user);
         return toResponse(trip);
+    }
+
+    @GetMapping("/{tripId}/itinerary")
+    public ItineraryResponse getItinerary(@PathVariable Long tripId, Authentication authentication){
+        var user = (User) authentication.getPrincipal();
+        return stepService.getItinerary(tripId, user);
     }
 
     @PutMapping("/{id}")

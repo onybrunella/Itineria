@@ -7,10 +7,13 @@ import java.util.Objects;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
+import com.itineria.backend.dto.ItineraryResponse;
+import com.itineria.backend.dto.StepResponse;
 import com.itineria.backend.entity.Step;
 import com.itineria.backend.entity.Trip;
 import com.itineria.backend.entity.User;
 import com.itineria.backend.repository.StepRepository;
+import com.itineria.backend.util.DistanceUtils;
 
 @Service
 public class StepService {
@@ -39,11 +42,37 @@ public class StepService {
         return stepRepository.findByTripOrderByOrderIndexAsc(trip);
     }
 
+    /*
+     * public ItineraryResponse getItinerary(Long tripId, User user){
+     * var steps = getStepsForTrip(tripId, user);
+     * var totalDistance=calculateTotalDistance(steps);
+     * return new ItineraryResponse(steps, totalDistance);
+     * }
+     */
+
+    public ItineraryResponse getItinerary(Long tripId, User user) {
+        var steps = getStepsForTrip(tripId, user);
+        var totalDistance = calculateTotalDistance(steps);
+        var stepResponses = steps.stream().map(this::toStepResponse).toList();
+        return new ItineraryResponse(stepResponses, totalDistance);
+    }
+
+    private StepResponse toStepResponse(Step step) {
+        return new StepResponse(
+                step.getId(),
+                step.getLocationName(),
+                step.getLatitude(),
+                step.getLongitude(),
+                step.getDate(),
+                step.getNote(),
+                step.getOrderIndex());
+    }
+
     public Step getStep(Long stepId, User user) {
         var step = stepRepository.findById(stepId)
                 .orElseThrow(() -> new IllegalArgumentException("Cette étape n'existe pas."));
 
-        if (!step.getTrip().getUser().getId().equals(user.getId())) {
+        if (!Objects.equals(step.getTrip().getUser().getId(), user.getId())) {
             throw new AccessDeniedException("Vous n'avez pas accès à cette étape.");
         }
 
@@ -67,5 +96,20 @@ public class StepService {
     public void deleteStep(Long stepId, User user) {
         var step = getStep(stepId, user);
         stepRepository.delete(step);
+    }
+
+    public double calculateTotalDistance(List<Step> steps) {
+        double totalDistance = 0;
+
+        for (int i = 0; i < steps.size() - 1; i++) {
+            Step current = steps.get(i);
+            Step next = steps.get(i + 1);
+
+            totalDistance += DistanceUtils.calculateDistanceKm(
+                    current.getLatitude(), current.getLongitude(),
+                    next.getLatitude(), next.getLongitude());
+        }
+
+        return totalDistance;
     }
 }

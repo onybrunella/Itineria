@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.itineria.backend.dto.CreateStepRequest;
+import com.itineria.backend.dto.StepResponse;
 import com.itineria.backend.entity.Step;
 import com.itineria.backend.entity.User;
 import com.itineria.backend.service.StepService;
@@ -30,30 +31,45 @@ public class StepController {
     }
 
     @PostMapping
-    public Step createStep(@PathVariable Long tripId, @RequestBody CreateStepRequest request,
+    public StepResponse createStep(@PathVariable Long tripId, @RequestBody CreateStepRequest request,
             Authentication authentication) {
         var user = (User) authentication.getPrincipal();
-        return stepService.createStep(tripId, user, request.getLocationName(), request.getLatitude(),
+        var step = stepService.createStep(tripId, user, request.getLocationName(), request.getLatitude(),
                 request.getLongitude(), request.getDate(), request.getNote(), request.getOrderIndex());
+        return toResponse(step);
     }
 
     @GetMapping
-    public List<Step> getStepsForTrip(@PathVariable Long tripId, Authentication authentication) {
+    public List<StepResponse> getStepsForTrip(@PathVariable Long tripId, Authentication authentication) {
         var user = (User) authentication.getPrincipal();
-        return stepService.getStepsForTrip(tripId, user);
+        var steps = stepService.getStepsForTrip(tripId, user);
+        return steps.stream().map(this::toResponse).toList();
     }
 
     @PutMapping("/{stepId}")
-    public Step updateStep(@PathVariable Long tripId, @PathVariable Long stepId,
+    public StepResponse updateStep(@PathVariable Long tripId, @PathVariable Long stepId,
             @RequestBody CreateStepRequest request, Authentication authentication) {
         var user = (User) authentication.getPrincipal();
-        return stepService.updateStep(stepId, user, request.getLocationName(), request.getLatitude(),
+        var step = stepService.updateStep(stepId, user, request.getLocationName(), request.getLatitude(),
                 request.getLongitude(), request.getDate(), request.getNote(), request.getOrderIndex());
+        return toResponse(step);
     }
 
     @DeleteMapping("/{stepId}")
     public void deleteStep(@PathVariable Long tripId, @PathVariable Long stepId, Authentication authentication) {
         var user = (User) authentication.getPrincipal();
         stepService.deleteStep(stepId, user);
+    }
+
+    private StepResponse toResponse(Step step) {
+        return new StepResponse(
+                step.getId(),
+                step.getLocationName(),
+                step.getLatitude(),
+                step.getLongitude(),
+                step.getDate(),
+                step.getNote(),
+                step.getOrderIndex()
+        );
     }
 }

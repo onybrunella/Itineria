@@ -14,6 +14,12 @@ export class Auth {
     }, { responseType: 'text' }).pipe(tap(token => localStorage.setItem('token', token)));
   }
 
+  register(email: string, password: string, pseudo: string) {
+    return this.http.post('http://localhost:8080/api/auth/register', {
+      email, password, pseudo
+    });
+  }
+
   getToken():string|null{
     return localStorage.getItem('token');
   }

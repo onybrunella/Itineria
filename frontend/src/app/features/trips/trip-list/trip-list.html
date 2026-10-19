@@ -1,1 +1,12 @@
-<p>trip-list works!</p>
+<h1>Mes voyages</h1>
+
+@for (trip of trips; track trip.id) {
+  <div>
+    <h2>{{ trip.title }}</h2>
+    <p>{{ trip.description }}</p>
+    <p>{{ trip.startDate }} → {{ trip.endDate }}</p>
+    <span>{{ trip.status }}</span>
+  </div>
+} @empty {
+  <p>Aucun voyage pour le moment.</p>
+}

@@ -1,0 +1,19 @@
+<a [routerLink]="['/trips', tripId]">← Retour au voyage</a>
+<h1>Nouvelle étape</h1>
+
+<form (submit)="$event.preventDefault(); searchPlace()">
+  <input type="text" [formControl]="searchQuery" placeholder="Rechercher un lieu (Nominatim)" />
+  <button type="submit">Rechercher</button>
+</form>
+
+@for (place of suggestions(); track place.display_name) {
+  <button type="button" (click)="selectPlace(place)">{{ place.display_name }}</button>
+}
+
+<form [formGroup]="stepForm" (ngSubmit)="onSubmit()">
+  <input type="text" formControlName="locationName" placeholder="Nom du lieu" readonly />
+  <input type="date" formControlName="date" />
+  <textarea formControlName="note" placeholder="Note"></textarea>
+  <input type="number" formControlName="orderIndex" placeholder="Ordre" />
+  <button type="submit" [disabled]="stepForm.invalid">Ajouter l'étape</button>
+</form>

@@ -1,7 +1,9 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TripService } from '../../../core/services/trip';
+import { StepService } from '../../../core/services/step';
 import { Trip } from '../../../core/models/trip';
+import { Step } from '../../../core/models/step';
 
 @Component({
   selector: 'app-trip-detail',
@@ -11,10 +13,12 @@ import { Trip } from '../../../core/models/trip';
 })
 export class TripDetail implements OnInit {
   trip = signal<Trip | null>(null);
+  steps = signal<Step[]>([]);
 
   constructor(
     private route: ActivatedRoute,
     private tripService: TripService,
+    private stepService: StepService,
   ) {}
 
   ngOnInit() {
@@ -22,6 +26,10 @@ export class TripDetail implements OnInit {
     this.tripService.getTrip(id).subscribe({
       next: (data) => this.trip.set(data),
       error: (err) => console.error('Erreur chargement du voyage', err),
+    });
+    this.stepService.getSteps(id).subscribe({
+      next: (data) => this.steps.set(data),
+      error: (err) => console.error('Erreur chargement des etapes', err),
     });
   }
 }

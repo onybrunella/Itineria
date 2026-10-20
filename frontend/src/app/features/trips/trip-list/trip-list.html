@@ -1,12 +1,14 @@
 <h1>Mes voyages</h1>
 
+<a routerLink="/trips/new">Nouveau voyage</a>
+
 @for (trip of trips(); track trip.id) {
-  <div>
+  <a [routerLink]="['/trips', trip.id]">
     <h2>{{ trip.title }}</h2>
     <p>{{ trip.description }}</p>
     <p>{{ trip.startDate }} → {{ trip.endDate }}</p>
     <span>{{ trip.status }}</span>
-  </div>
+  </a>
 } @empty {
   <p>Aucun voyage pour le moment.</p>
 }

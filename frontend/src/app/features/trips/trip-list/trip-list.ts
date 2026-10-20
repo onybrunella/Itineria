@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { TripService } from '../../../core/services/trip';
 import { Trip } from '../../../core/models/trip';
 
@@ -9,14 +9,14 @@ import { Trip } from '../../../core/models/trip';
   styleUrl: './trip-list.scss',
 })
 export class TripList implements OnInit {
+  trips = signal<Trip[]>([]);
 
-  constructor(private tripService: TripService){}
+  constructor(private tripService: TripService) {}
 
-  trips: Trip[] = [];
   ngOnInit() {
-  this.tripService.getTrips().subscribe({
-    next: (data) => this.trips = data,
-    error: (err) => console.error('Erreur chargement voyages', err)
-  });
-}
+    this.tripService.getTrips().subscribe({
+      next: (data) => this.trips.set(data),
+      error: (err) => console.error('Erreur chargement voyages', err),
+    });
+  }
 }

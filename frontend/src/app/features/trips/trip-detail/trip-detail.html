@@ -1,0 +1,9 @@
+@if (trip(); as t) {
+  <a routerLink="/trips">← Mes voyages</a>
+  <h1>{{ t.title }}</h1>
+  <p>{{ t.description }}</p>
+  <p>{{ t.startDate }} → {{ t.endDate }}</p>
+  <span>{{ t.status }}</span>
+} @else {
+  <p>Chargement du voyage...</p>
+}

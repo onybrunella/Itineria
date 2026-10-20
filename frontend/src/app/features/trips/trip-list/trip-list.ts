@@ -1,10 +1,11 @@
 import { Component, OnInit, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { TripService } from '../../../core/services/trip';
 import { Trip } from '../../../core/models/trip';
 
 @Component({
   selector: 'app-trip-list',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './trip-list.html',
   styleUrl: './trip-list.scss',
 })

@@ -5,20 +5,20 @@
   <p>{{ t.startDate }} → {{ t.endDate }}</p>
   <span>{{ t.status }}</span>
 
-  <app-trip-map [steps]="steps()" />
+  <app-trip-map
+    [steps]="steps()"
+    [selectedStep]="selectedStep()"
+    (stepSelect)="onSelectStep($event)"
+  />
 
   <h2>Étapes</h2>
   <a [routerLink]="['/trips', t.id, 'steps', 'new']">Ajouter une étape</a>
 
-  @for (step of steps(); track step.id) {
-    <div>
-      <h3>{{ step.locationName }}</h3>
-      <p>{{ step.date }}</p>
-      <p>{{ step.note }}</p>
-    </div>
-  } @empty {
-    <p>Aucune étape pour le moment.</p>
-  }
+  <app-trip-timeline
+    [steps]="steps()"
+    [selectedId]="selectedStep()?.id ?? null"
+    (stepSelect)="onSelectStep($event)"
+  />
 } @else {
   <p>Chargement du voyage...</p>
 }

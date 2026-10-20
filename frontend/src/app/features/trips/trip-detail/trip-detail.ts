@@ -5,16 +5,18 @@ import { StepService } from '../../../core/services/step';
 import { Trip } from '../../../core/models/trip';
 import { Step } from '../../../core/models/step';
 import { TripMap } from '../trip-map/trip-map';
+import { TripTimeline } from '../trip-timeline/trip-timeline';
 
 @Component({
   selector: 'app-trip-detail',
-  imports: [RouterLink, TripMap],
+  imports: [RouterLink, TripMap, TripTimeline],
   templateUrl: './trip-detail.html',
   styleUrl: './trip-detail.scss',
 })
 export class TripDetail implements OnInit {
   trip = signal<Trip | null>(null);
   steps = signal<Step[]>([]);
+  selectedStep = signal<Step | null>(null);
 
   constructor(
     private route: ActivatedRoute,
@@ -32,5 +34,9 @@ export class TripDetail implements OnInit {
       next: (data) => this.steps.set(data),
       error: (err) => console.error('Erreur chargement des etapes', err),
     });
+  }
+
+  onSelectStep(step: Step) {
+    this.selectedStep.set(step);
   }
 }

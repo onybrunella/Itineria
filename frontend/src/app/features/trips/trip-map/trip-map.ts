@@ -1,4 +1,4 @@
-import { Component, computed, effect, input, OnDestroy, signal } from '@angular/core';
+import { Component, computed, effect, input, OnDestroy, output, signal } from '@angular/core';
 import { LeafletDirective, LeafletLayersDirective } from '@bluehalo/ngx-leaflet';
 import * as L from 'leaflet';
 import { Step } from '../../../core/models/step';
@@ -21,6 +21,8 @@ const markerIcon = L.icon({
 })
 export class TripMap implements OnDestroy {
   steps = input<Step[]>([]);
+  selectedStep = input<Step | null>(null);
+  stepSelect = output<Step>();
 
   private map = signal<L.Map | null>(null);
   private line?: L.Polyline;
@@ -38,9 +40,14 @@ export class TripMap implements OnDestroy {
 
   layers = computed(() => {
     const sorted = [...this.steps()].sort((a, b) => a.orderIndex - b.orderIndex);
-    return sorted.map((step) =>
-      L.marker([step.latitude, step.longitude], { icon: markerIcon }).bindPopup(step.locationName),
-    );
+    return sorted.map((step) => {
+      const marker = L.marker([step.latitude, step.longitude], {
+        icon: markerIcon,
+        title: String(step.id),
+      }).bindPopup(step.locationName);
+      marker.on('click', () => this.stepSelect.emit(step));
+      return marker;
+    });
   });
 
   fitBounds = computed(() => {
@@ -58,6 +65,13 @@ export class TripMap implements OnDestroy {
     effect(() => {
       this.startAnimation(this.map(), this.steps());
     });
+    effect(() => {
+      const step = this.selectedStep();
+      const map = this.map();
+      if (step && map) {
+        this.focus(step, map);
+      }
+    });
   }
 
   onMapReady(map: L.Map) {
@@ -67,6 +81,15 @@ export class TripMap implements OnDestroy {
   ngOnDestroy() {
     this.stopAnimation();
     this.line?.remove();
+  }
+
+  private focus(step: Step, map: L.Map) {
+    map.flyTo([step.latitude, step.longitude], 14);
+    for (const marker of this.layers()) {
+      if (marker.options.title === String(step.id)) {
+        marker.openPopup();
+      }
+    }
   }
 
   private startAnimation(map: L.Map | null, steps: Step[]) {

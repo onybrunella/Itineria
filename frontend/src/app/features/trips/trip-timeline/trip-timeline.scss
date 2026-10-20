@@ -1,0 +1,13 @@
+.step {
+  display: block;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0.5rem 0;
+}
+
+.is-selected {
+  font-weight: bold;
+}

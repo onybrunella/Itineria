@@ -4,10 +4,11 @@ import { TripService } from '../../../core/services/trip';
 import { StepService } from '../../../core/services/step';
 import { Trip } from '../../../core/models/trip';
 import { Step } from '../../../core/models/step';
+import { TripMap } from '../trip-map/trip-map';
 
 @Component({
   selector: 'app-trip-detail',
-  imports: [RouterLink],
+  imports: [RouterLink, TripMap],
   templateUrl: './trip-detail.html',
   styleUrl: './trip-detail.scss',
 })

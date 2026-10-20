@@ -5,6 +5,8 @@
   <p>{{ t.startDate }} → {{ t.endDate }}</p>
   <span>{{ t.status }}</span>
 
+  <app-trip-map [steps]="steps()" />
+
   <h2>Étapes</h2>
   <a [routerLink]="['/trips', t.id, 'steps', 'new']">Ajouter une étape</a>
 

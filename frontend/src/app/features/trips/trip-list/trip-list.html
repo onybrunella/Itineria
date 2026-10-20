@@ -1,6 +1,6 @@
 <h1>Mes voyages</h1>
 
-@for (trip of trips; track trip.id) {
+@for (trip of trips(); track trip.id) {
   <div>
     <h2>{{ trip.title }}</h2>
     <p>{{ trip.description }}</p>

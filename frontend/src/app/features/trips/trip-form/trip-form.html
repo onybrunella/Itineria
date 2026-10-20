@@ -1,0 +1,15 @@
+<h1>Nouveau voyage</h1>
+
+<form [formGroup]="tripForm" (ngSubmit)="onSubmit()">
+  <input type="text" formControlName="title" placeholder="Titre" />
+  <textarea formControlName="description" placeholder="Description"></textarea>
+  <input type="date" formControlName="startDate" />
+  <input type="date" formControlName="endDate" />
+
+  <select formControlName="status">
+    <option value="DRAFT">Brouillon</option>
+    <option value="PUBLISHED">Publié</option>
+  </select>
+
+  <button type="submit" [disabled]="tripForm.invalid">Créer</button>
+</form>

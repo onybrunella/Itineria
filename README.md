@@ -1,122 +1,86 @@
-﻿# Itineria
+# Itineria
 
-Itineria est un carnet de voyage interactif avec une carte animée. Chaque voyage se construit visuellement au fil des étapes ajoutées : la carte se dessine en direct, le carnet se remplit de photos et de notes, et le tout peut être rejoué comme une petite histoire animée.
+Itineria is an interactive travel journal with a live map. Each trip is built step by step: the map draws itself as you add stops, the journal fills up with photos and notes, and you can replay the whole trip like a short animated story.
 
-Ce projet est développé comme projet d'apprentissage personnel avec pour objectif de progresser sur Angular (frontend) et Spring Boot (backend) tout en produisant un outil réellement utilisable.
+This is a personal learning project to get better at Angular and Spring Boot while building something actually usable.
 
-## Table des matières
- 
-- [Stack technique](#stack-technique)
-- [Prérequis](#prérequis)
-- [Outils recommandés](#outils-recommandés)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Modèle de données](#modèle-de-données)
-- [Endpoints API](#endpoints-api)
+## Tech stack
 
-## Stack technique
- 
-> Décidée une fois pour toutes — on ne revient plus dessus en cours de route.
- 
-- **Frontend** : Angular (standalone components)
-- **Backend** : Spring Boot 3
-- **Base de données** : PostgreSQL (avec Docker Compose en local)
-- **Auth** : JWT
-- **Carte** : Leaflet + OpenStreetMap
-- **Stockage images** : dossier local `/uploads` pour la V1
-- **Migrations DB** : Hibernate en mode `update`
-- **Géocodage** : Nominatim
+- **Frontend:** Angular (standalone components)
+- **Backend:** Spring Boot 3
+- **Database:** PostgreSQL (Docker Compose for local development)
+- **Auth:** JWT
+- **Map:** Leaflet + OpenStreetMap
+- **Image storage:** local `/uploads` folder (V1)
+- **DB migrations:** Hibernate `update` mode
+- **Geocoding:** Nominatim
 
-## Prérequis
- 
-Pour faire tourner ce projet en local, il faut avoir installé :
- 
-- [JDK 17 ou 21](https://adoptium.net/)
-- [Maven](https://maven.apache.org/) (ou utiliser le wrapper `./mvnw` fourni avec le backend)
-- [Node.js LTS](https://nodejs.org/) + npm
-- [Angular CLI](https://angular.dev/tools/cli) : `npm install -g @angular/cli`
-- [Docker](https://www.docker.com/) + Docker Compose (pour lancer PostgreSQL sans l'installer en local)
+## Requirements
 
-Une installation locale de PostgreSQL fonctionne aussi, si Docker n'est pas utilisé.
+- JDK 17 or 21
+- Maven (or the `./mvnw` wrapper included in the backend)
+- Node.js LTS and npm
+- Angular CLI: `npm install -g @angular/cli`
+- Docker and Docker Compose (to run PostgreSQL)
 
-- [Postman](https://www.postman.com/) ou [Insomnia](https://insomnia.rest/) - pour tester les endpoints de l'API pendant le développement
-- [pgAdmin](https://www.pgadmin.org/) - pour visualiser la base PostgreSQL (optionnel, une extension DB dans l'IDE suffit aussi)
-- [GitHub CLI](https://cli.github.com/) - pour gérer les Issues en ligne de commande
+Optional tools:
 
-## Installation
+- Postman or Insomnia, to test the API
+- pgAdmin, to browse the database
+- GitHub CLI, to manage issues from the terminal
 
-### 1. Cloner le repo
+## Getting started
 
 ```bash
+# 1. Clone the repo
 git clone https://github.com/onybrunella/itineria.git
 cd itineria
-```
 
-### 2. Lancer la base de données
- 
-```bash
+# 2. Start the database
 docker compose up -d
-```
- 
-### 3. Lancer le backend
- 
-```bash
+
+# 3. Start the backend (http://localhost:8080)
 cd backend
 ./mvnw spring-boot:run
-```
-Le backend démarre par défaut sur `http://localhost:8080`.
- 
-### 4. Lancer le frontend
- 
-```bash
-cd frontend
+
+# 4. Start the frontend (http://localhost:4200)
+cd ../frontend
 npm install
 ng serve
 ```
-Le frontend démarre par défaut sur `http://localhost:4200`.
- 
- 
+
 ## Configuration
- 
-### Backend — `application.properties`
- 
+
+Backend settings live in `application.properties`:
+
 ```properties
 spring.datasource.url=jdbc:postgresql://localhost:5432/itineria_db
 spring.datasource.username=postgres
 spring.datasource.password=postgres
 spring.jpa.hibernate.ddl-auto=update
-jwt.secret=change_moi_en_variable_environnement
+jwt.secret=change_me
 ```
- 
-### CORS
- 
-Le backend doit autoriser les requêtes venant de `http://localhost:4200` (origine du frontend en développement) pour que les deux applications communiquent correctement.
- 
-### Variables sensibles
- 
-Ne jamais committer de vrais secrets (mot de passe DB, clé JWT). Utiliser un fichier `.env` ou des variables d'environnement une fois le projet prêt à être partagé ou déployé.
- 
- 
-## Modèle de données
- 
-**User** : id, email, password (hashé), pseudo, createdAt
- 
-**Trip** : id, title, description, startDate, endDate, status (DRAFT / PUBLISHED), userId
- 
-**Step** : id, tripId, locationName, latitude, longitude, date, note, orderIndex
- 
-**Photo** : id, stepId, url, uploadedAt
- 
-Relations : `User` 1→N `Trip` · `Trip` 1→N `Step` · `Step` 1→N `Photo`
- 
- 
-## Endpoints API
- 
+
+**CORS:** the backend must allow requests from `http://localhost:4200` so the frontend can talk to it.
+
+**Secrets:** never commit real secrets (DB password, JWT key). Use environment variables or a `.env` file before sharing or deploying.
+
+## Data model
+
+- **User:** id, email, password (hashed), pseudo, createdAt
+- **Trip:** id, title, description, startDate, endDate, status (DRAFT or PUBLISHED), userId
+- **Step:** id, tripId, locationName, latitude, longitude, date, note, orderIndex
+- **Photo:** id, stepId, url, uploadedAt
+
+A User has many Trips, a Trip has many Steps, and a Step has many Photos.
+
+## API endpoints
+
 ```
 # Auth
 POST   /api/auth/register
 POST   /api/auth/login
- 
+
 # Trips
 GET    /api/trips
 POST   /api/trips
@@ -124,27 +88,24 @@ GET    /api/trips/{id}
 PUT    /api/trips/{id}
 DELETE /api/trips/{id}
 GET    /api/trips/{id}/itinerary
- 
+
 # Steps
 POST   /api/trips/{tripId}/steps
 GET    /api/trips/{tripId}/steps
 PUT    /api/steps/{id}
 DELETE /api/steps/{id}
- 
+
 # Photos
 POST   /api/steps/{stepId}/photos
 DELETE /api/photos/{id}
 ```
- 
-Chaque endpoint (sauf `register`/`login`) vérifie que l'utilisateur connecté est bien propriétaire du `Trip` concerné.
 
+All endpoints except `register` and `login` require a JWT (`Authorization: Bearer <token>`) and check that the logged-in user owns the trip.
 
- 
-## Licence
- 
-Ce projet est distribué sous licence [MIT](./LICENSE) — libre d'utilisation, de modification et de partage, à condition de conserver la mention de copyright originale.
- 
+## License
 
-## Mainteneur
- 
-- **[onybrunella]** — [github.com/onybrunella](https://github.com/onybrunella)
+[MIT](./LICENSE). Free to use, modify and share, as long as the original copyright notice is kept.
+
+## Maintainer
+
+[onybrunella](https://github.com/onybrunella)

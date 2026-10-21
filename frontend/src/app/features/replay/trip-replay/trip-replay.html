@@ -1,0 +1,34 @@
+@if (trip(); as t) {
+  <p>
+    <a [routerLink]="['/trips', t.id]">← Retour au voyage</a>
+  </p>
+  <h1>{{ t.title }}</h1>
+
+  @if (steps().length === 0) {
+    <p>Aucune étape à rejouer.</p>
+  } @else {
+    <app-trip-map
+      [steps]="steps()"
+      [selectedStep]="currentStep()"
+      (stepSelect)="onSelectStep($event)"
+    />
+
+    @if (currentStep(); as step) {
+      <h2>{{ step.locationName }}</h2>
+      <p>{{ step.date }}</p>
+      <p>{{ step.note }}</p>
+      <p>{{ index() + 1 }} / {{ steps().length }}</p>
+    }
+
+    <p>
+      @if (playing()) {
+        <button type="button" (click)="pause()">Pause</button>
+      } @else {
+        <button type="button" (click)="play()">Lecture</button>
+      }
+      <button type="button" (click)="next()">Étape suivante</button>
+    </p>
+  }
+} @else {
+  <p>Chargement du replay...</p>
+}

@@ -29,6 +29,14 @@
   />
 
   <app-step-photos [stepId]="selectedStep()?.id ?? null" />
+
+  @if (selectedStep(); as s) {
+    <p>
+      <a [routerLink]="['/trips', t.id, 'scrapbook']" [fragment]="'step-' + s.id">
+        Voir cette étape dans le carnet
+      </a>
+    </p>
+  }
 } @else {
   <p>Chargement du voyage...</p>
 }

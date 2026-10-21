@@ -70,9 +70,35 @@ export class TripScrapbook implements OnInit, OnDestroy {
     );
 
     forkJoin(pageLoads).subscribe({
-      next: (pages) => this.pages.set(pages),
+      next: (pages) => {
+        this.pages.set(pages);
+        this.scrollToFragment();
+      },
       error: (err) => console.error('Erreur chargement du carnet', err),
     });
+  }
+
+  private scrollToFragment() {
+    const fragment = this.route.snapshot.fragment;
+    if (!fragment) {
+      return;
+    }
+    const tryScroll = (attempts = 0) => {
+      const el = document.getElementById(fragment);
+      if (!el) {
+        if (attempts < 40) {
+          setTimeout(() => tryScroll(attempts + 1), 50);
+        }
+        return;
+      }
+      const pending = Array.from(document.images).filter((img) => !img.complete);
+      if (pending.length && attempts < 40) {
+        setTimeout(() => tryScroll(attempts + 1), 50);
+        return;
+      }
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+    tryScroll();
   }
 
   private revokeAll() {

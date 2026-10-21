@@ -19,6 +19,8 @@
     [selectedId]="selectedStep()?.id ?? null"
     (stepSelect)="onSelectStep($event)"
   />
+
+  <app-step-photos [stepId]="selectedStep()?.id ?? null" />
 } @else {
   <p>Chargement du voyage...</p>
 }

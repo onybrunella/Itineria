@@ -6,10 +6,11 @@ import { Trip } from '../../../core/models/trip';
 import { Step } from '../../../core/models/step';
 import { TripMap } from '../trip-map/trip-map';
 import { TripTimeline } from '../trip-timeline/trip-timeline';
+import { StepPhotos } from '../../photos/step-photos/step-photos';
 
 @Component({
   selector: 'app-trip-detail',
-  imports: [RouterLink, TripMap, TripTimeline],
+  imports: [RouterLink, TripMap, TripTimeline, StepPhotos],
   templateUrl: './trip-detail.html',
   styleUrl: './trip-detail.scss',
 })

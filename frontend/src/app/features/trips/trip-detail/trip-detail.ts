@@ -32,12 +32,26 @@ export class TripDetail implements OnInit {
       error: (err) => console.error('Erreur chargement du voyage', err),
     });
     this.stepService.getSteps(id).subscribe({
-      next: (data) => this.steps.set(data),
+      next: (data) => {
+        this.steps.set(data);
+        this.selectFromQuery(data);
+      },
       error: (err) => console.error('Erreur chargement des etapes', err),
     });
   }
 
   onSelectStep(step: Step) {
     this.selectedStep.set(step);
+  }
+
+  private selectFromQuery(steps: Step[]) {
+    const raw = this.route.snapshot.queryParamMap.get('step');
+    if (!raw) {
+      return;
+    }
+    const found = steps.find((step) => step.id === Number(raw));
+    if (found) {
+      this.selectedStep.set(found);
+    }
   }
 }

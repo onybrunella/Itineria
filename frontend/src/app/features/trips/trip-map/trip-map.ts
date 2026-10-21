@@ -51,6 +51,14 @@ export class TripMap implements OnDestroy {
   });
 
   fitBounds = computed(() => {
+    const selected = this.selectedStep();
+    if (selected) {
+      const pad = 0.004;
+      return L.latLngBounds(
+        [selected.latitude - pad, selected.longitude - pad],
+        [selected.latitude + pad, selected.longitude + pad],
+      );
+    }
     const steps = this.steps();
     if (steps.length === 0) {
       return L.latLngBounds([
@@ -84,7 +92,7 @@ export class TripMap implements OnDestroy {
   }
 
   private focus(step: Step, map: L.Map) {
-    map.flyTo([step.latitude, step.longitude], 14);
+    map.flyTo([step.latitude, step.longitude], 16);
     for (const marker of this.layers()) {
       if (marker.options.title === String(step.id)) {
         marker.openPopup();

@@ -7,6 +7,7 @@ import { TripForm } from './features/trips/trip-form/trip-form';
 import { TripDetail } from './features/trips/trip-detail/trip-detail';
 import { StepForm } from './features/steps/step-form/step-form';
 import { TripScrapbook } from './features/photos/trip-scrapbook/trip-scrapbook';
+import { TripReplay } from './features/replay/trip-replay/trip-replay';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'trips', pathMatch: 'full' },
@@ -16,6 +17,7 @@ export const routes: Routes = [
   { path: 'trips/new', component: TripForm, canActivate: [authGuard] },
   { path: 'trips/:id/steps/new', component: StepForm, canActivate: [authGuard] },
   { path: 'trips/:id/scrapbook', component: TripScrapbook, canActivate: [authGuard] },
+  { path: 'trips/:id/replay', component: TripReplay, canActivate: [authGuard] },
   { path: 'trips/:id', component: TripDetail, canActivate: [authGuard] },
   { path: '**', redirectTo: 'login' },
   

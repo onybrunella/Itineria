@@ -1,25 +1,21 @@
 @if (stepId(); as id) {
-  <h3>Photos de cette étape</h3>
+<h3>Photos de cette étape</h3>
 
-  <input
-    type="file"
-    accept="image/jpeg,image/png,image/webp"
-    (change)="onFileChosen($event)"
-  />
+<input type="file" accept="image/jpeg,image/png,image/webp" (change)="onFileChosen($event)" />
 
-  @if (previewUrl()) {
-    <img [src]="previewUrl()!" alt="Aperçu" width="200" />
-  }
+@if (previewUrl()) {
+<img [src]="previewUrl()!" alt="Aperçu" width="200" />
+}
 
-  <button type="button" [disabled]="!selectedFile()" (click)="upload()">
-    Envoyer
-  </button>
+<button type="button" [disabled]="!selectedFile()" (click)="upload()">
+  Envoyer
+</button>
 
-  @for (src of imageUrls(); track src) {
-    <img [src]="src" alt="Photo" width="200" />
-  } @empty {
-    <p>Aucune photo pour le moment.</p>
-  }
+@for (src of imageUrls(); track src) {
+<img [src]="src" alt="Photo" width="200" />
+} @empty {
+<p>Aucune photo pour le moment.</p>
+}
 } @else {
-  <p>Clique une étape pour ajouter des photos.</p>
+<p>Clique une étape pour ajouter des photos.</p>
 }

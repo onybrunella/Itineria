@@ -1,5 +1,9 @@
 @if (trip(); as t) {
-  <a routerLink="/trips">← Mes voyages</a>
+  <p>
+    <a routerLink="/trips">← Mes voyages</a>
+    ·
+    <a [routerLink]="['/trips', t.id, 'scrapbook']">Voir le carnet</a>
+  </p>
   <h1>{{ t.title }}</h1>
   <p>{{ t.description }}</p>
   <p>{{ t.startDate }} → {{ t.endDate }}</p>
@@ -12,7 +16,11 @@
   />
 
   <h2>Étapes</h2>
-  <a [routerLink]="['/trips', t.id, 'steps', 'new']">Ajouter une étape</a>
+  <p>
+    <a [routerLink]="['/trips', t.id, 'steps', 'new']">Ajouter une étape</a>
+    ·
+    <a [routerLink]="['/trips', t.id, 'scrapbook']">Voir le carnet</a>
+  </p>
 
   <app-trip-timeline
     [steps]="steps()"

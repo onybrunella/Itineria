@@ -1,0 +1,22 @@
+@if (trip(); as t) {
+  <a [routerLink]="['/trips', t.id]">← Retour au voyage</a>
+  <h1>{{ t.title }}</h1>
+
+  @for (page of pages(); track page.step.id) {
+    <section [id]="'step-' + page.step.id">
+      <h2>{{ page.step.locationName }}</h2>
+      <p>{{ page.step.date }}</p>
+      <p>{{ page.step.note }}</p>
+
+      @for (src of page.imageUrls; track src) {
+        <img [src]="src" alt="" />
+      } @empty {
+        <p>Pas de photo pour cette étape.</p>
+      }
+    </section>
+  } @empty {
+    <p>Aucune étape.</p>
+  }
+} @else {
+  <p>Chargement du carnet...</p>
+}

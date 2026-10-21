@@ -28,8 +28,25 @@ export class Auth {
     localStorage.removeItem('token');
   }
 
-  isLoggedIn():boolean{
-    return !!this.getToken();
+  isLoggedIn(): boolean {
+    const token = this.getToken();
+    if (!token) {
+      return false;
+    }
+    if (!this.isTokenFresh(token)) {
+      this.logout();
+      return false;
+    }
+    return true;
+  }
+
+  private isTokenFresh(token: string): boolean {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return typeof payload.exp === 'number' && payload.exp * 1000 > Date.now();
+    } catch {
+      return false;
+    }
   }
 
   

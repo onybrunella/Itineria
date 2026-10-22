@@ -10,6 +10,7 @@
     <app-trip-map
       [steps]="steps()"
       [selectedStep]="currentStep()"
+      [visitedCount]="index() + 1"
       (stepSelect)="onSelectStep($event)"
     />
 

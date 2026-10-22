@@ -22,6 +22,7 @@ const markerIcon = L.icon({
 export class TripMap implements OnDestroy {
   steps = input<Step[]>([]);
   selectedStep = input<Step | null>(null);
+  visitedCount = input<number | null>(null);
   stepSelect = output<Step>();
 
   private map = signal<L.Map | null>(null);
@@ -40,7 +41,9 @@ export class TripMap implements OnDestroy {
 
   layers = computed(() => {
     const sorted = [...this.steps()].sort((a, b) => a.orderIndex - b.orderIndex);
-    return sorted.map((step) => {
+    const count = this.visitedCount();
+    const visible = count == null ? sorted : sorted.slice(0, Math.max(0, count));
+    return visible.map((step) => {
       const marker = L.marker([step.latitude, step.longitude], {
         icon: markerIcon,
         title: String(step.id),
@@ -71,7 +74,7 @@ export class TripMap implements OnDestroy {
 
   constructor() {
     effect(() => {
-      this.startAnimation(this.map(), this.steps());
+      this.startAnimation(this.map(), this.steps(), this.visitedCount());
     });
     effect(() => {
       const step = this.selectedStep();
@@ -100,7 +103,7 @@ export class TripMap implements OnDestroy {
     }
   }
 
-  private startAnimation(map: L.Map | null, steps: Step[]) {
+  private startAnimation(map: L.Map | null, steps: Step[], visitedCount: number | null) {
     this.stopAnimation();
     if (!map) {
       return;
@@ -108,17 +111,22 @@ export class TripMap implements OnDestroy {
 
     if (!this.line) {
       this.line = L.polyline([], { color: '#2563eb' }).addTo(map);
-    } else {
-      this.line.setLatLngs([]);
     }
 
     const sorted = [...steps].sort((a, b) => a.orderIndex - b.orderIndex);
-    if (sorted.length < 2) {
+    const visible = visitedCount == null ? sorted : sorted.slice(0, Math.max(0, visitedCount));
+
+    if (visible.length < 2) {
+      this.line.setLatLngs(visible.map((step) => [step.latitude, step.longitude]));
       return;
     }
 
-    const path = this.interpolate(sorted);
-    let index = 0;
+    const path = this.interpolate(visible);
+    const alreadyDrawn =
+      visitedCount == null || visible.length < 3 ? [] : this.interpolate(visible.slice(0, -1));
+    let index = alreadyDrawn.length;
+    this.line.setLatLngs(path.slice(0, Math.max(index, 1)));
+
     const tick = () => {
       index = Math.min(index + 4, path.length);
       this.line?.setLatLngs(path.slice(0, index));

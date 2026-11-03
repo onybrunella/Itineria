@@ -6,6 +6,16 @@
 
   @if (steps().length === 0) {
     <p>Aucune étape à rejouer.</p>
+  } @else if (finished()) {
+    <h2>Voyage terminé</h2>
+    @if (stats(); as s) {
+      <p>{{ s.places }} lieux</p>
+      <p>{{ s.km }} km</p>
+      <p>{{ s.days }} jours</p>
+    }
+    <p>
+      <button type="button" (click)="play()">Revoir le voyage</button>
+    </p>
   } @else {
     <app-trip-map
       [steps]="steps()"

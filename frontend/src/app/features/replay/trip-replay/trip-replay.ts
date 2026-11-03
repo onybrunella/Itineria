@@ -19,10 +19,28 @@ export class TripReplay implements OnInit, OnDestroy {
   steps = signal<Step[]>([]);
   index = signal(0);
   playing = signal(false);
+  finished = signal(false);
 
   currentStep = computed(() => {
     const list = this.steps();
     return list[this.index()] ?? null;
+  });
+
+  stats = computed(() => {
+    const trip = this.trip();
+    const steps = this.steps();
+    if (!trip || steps.length === 0) {
+      return null;
+    }
+    let km = 0;
+    for (let i = 0; i < steps.length - 1; i++) {
+      km += distanceKm(steps[i], steps[i + 1]);
+    }
+    return {
+      places: steps.length,
+      km: Math.round(km * 10) / 10,
+      days: daysBetween(trip.startDate, trip.endDate),
+    };
   });
 
   private timer: ReturnType<typeof setInterval> | null = null;
@@ -53,6 +71,7 @@ export class TripReplay implements OnInit, OnDestroy {
     if (this.playing() || this.steps().length === 0) {
       return;
     }
+    this.finished.set(false);
     if (this.index() >= this.steps().length - 1) {
       this.index.set(0);
     }
@@ -75,6 +94,7 @@ export class TripReplay implements OnInit, OnDestroy {
 
   onSelectStep(step: Step) {
     this.pause();
+    this.finished.set(false);
     const i = this.steps().findIndex((item) => item.id === step.id);
     if (i >= 0) {
       this.index.set(i);
@@ -85,8 +105,28 @@ export class TripReplay implements OnInit, OnDestroy {
     const next = this.index() + 1;
     if (next >= this.steps().length) {
       this.pause();
+      this.finished.set(true);
       return;
     }
     this.index.set(next);
   }
+}
+
+function distanceKm(from: Step, to: Step): number {
+  const earthKm = 6371;
+  const toRad = (deg: number) => (deg * Math.PI) / 180;
+  const dLat = toRad(to.latitude - from.latitude);
+  const dLng = toRad(to.longitude - from.longitude);
+  const lat1 = toRad(from.latitude);
+  const lat2 = toRad(to.latitude);
+  const h =
+    Math.sin(dLat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) ** 2;
+  return 2 * earthKm * Math.asin(Math.min(1, Math.sqrt(h)));
+}
+
+function daysBetween(start: string, end: string): number {
+  const from = new Date(`${start}T00:00:00`);
+  const to = new Date(`${end}T00:00:00`);
+  const diff = Math.round((to.getTime() - from.getTime()) / 86_400_000);
+  return Math.max(0, diff);
 }

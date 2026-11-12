@@ -1,1 +1,12 @@
+<nav class="theme-switcher" aria-label="Tester une palette">
+  @for (item of themes; track item.id) {
+    <button
+      type="button"
+      [class.is-on]="theme() === item.id"
+      (click)="setTheme(item.id)"
+    >
+      {{ item.label }}
+    </button>
+  }
+</nav>
 <router-outlet />

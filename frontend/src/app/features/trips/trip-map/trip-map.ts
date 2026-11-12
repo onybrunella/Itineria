@@ -83,6 +83,7 @@ export class TripMap implements OnDestroy {
         this.focus(step, map);
       }
     });
+    window.addEventListener('itineria-theme', this.onTheme);
   }
 
   onMapReady(map: L.Map) {
@@ -90,8 +91,18 @@ export class TripMap implements OnDestroy {
   }
 
   ngOnDestroy() {
+    window.removeEventListener('itineria-theme', this.onTheme);
     this.stopAnimation();
     this.line?.remove();
+  }
+
+  private onTheme = () => {
+    this.line?.setStyle({ color: this.routeColor() });
+  };
+
+  private routeColor(): string {
+    const value = getComputedStyle(document.documentElement).getPropertyValue('--color-route').trim();
+    return value || '#2563eb';
   }
 
   private focus(step: Step, map: L.Map) {
@@ -109,8 +120,11 @@ export class TripMap implements OnDestroy {
       return;
     }
 
+    const routeColor = this.routeColor();
     if (!this.line) {
-      this.line = L.polyline([], { color: '#2563eb' }).addTo(map);
+      this.line = L.polyline([], { color: routeColor }).addTo(map);
+    } else {
+      this.line.setStyle({ color: routeColor });
     }
 
     const sorted = [...steps].sort((a, b) => a.orderIndex - b.orderIndex);

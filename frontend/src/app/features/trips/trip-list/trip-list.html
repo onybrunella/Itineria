@@ -5,9 +5,9 @@
 @for (trip of trips(); track trip.id) {
   <a [routerLink]="['/trips', trip.id]">
     <h2>{{ trip.title }}</h2>
-    <p>{{ trip.description }}</p>
+    <p class="note">{{ trip.description }}</p>
     <p>{{ trip.startDate }} → {{ trip.endDate }}</p>
-    <span>{{ trip.status }}</span>
+    <span class="status">{{ trip.status }}</span>
   </a>
 } @empty {
   <p>Aucun voyage pour le moment.</p>

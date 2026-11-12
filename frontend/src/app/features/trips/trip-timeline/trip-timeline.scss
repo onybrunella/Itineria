@@ -5,9 +5,17 @@
   cursor: pointer;
   background: none;
   border: none;
-  padding: 0.5rem 0;
+  border-radius: var(--radius);
+  padding: 0.5rem 0.75rem;
+  color: var(--color-ink);
+}
+
+.step:hover {
+  background: var(--color-sand);
 }
 
 .is-selected {
-  font-weight: bold;
+  font-weight: 700;
+  background: var(--color-selected);
+  box-shadow: inset 4px 0 0 var(--color-button);
 }

@@ -6,7 +6,7 @@
     <section [id]="'step-' + page.step.id">
       <h2>{{ page.step.locationName }}</h2>
       <p>{{ page.step.date }}</p>
-      <p>{{ page.step.note }}</p>
+      <p class="note">{{ page.step.note }}</p>
       <p>
         <a [routerLink]="['/trips', t.id]" [queryParams]="{ step: page.step.id }">
           Voir sur la carte

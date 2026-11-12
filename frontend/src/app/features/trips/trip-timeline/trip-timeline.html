@@ -2,7 +2,7 @@
   <button type="button" class="step" [class.is-selected]="step.id === selectedId()" (click)="onSelect(step)">
     <h3>{{ step.locationName }}</h3>
     <p>{{ step.date }}</p>
-    <p>{{ step.note }}</p>
+    <p class="note">{{ step.note }}</p>
   </button>
 } @empty {
   <p>Aucune étape pour le moment.</p>

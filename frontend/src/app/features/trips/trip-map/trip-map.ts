@@ -94,6 +94,11 @@ export class TripMap implements OnDestroy {
     this.line?.remove();
   }
 
+  private routeColor(): string {
+    const value = getComputedStyle(document.documentElement).getPropertyValue('--color-route').trim();
+    return value || '#f4d58d';
+  }
+
   private focus(step: Step, map: L.Map) {
     map.flyTo([step.latitude, step.longitude], 16);
     for (const marker of this.layers()) {
@@ -109,8 +114,11 @@ export class TripMap implements OnDestroy {
       return;
     }
 
+    const routeColor = this.routeColor();
     if (!this.line) {
-      this.line = L.polyline([], { color: '#2563eb' }).addTo(map);
+      this.line = L.polyline([], { color: routeColor }).addTo(map);
+    } else {
+      this.line.setStyle({ color: routeColor });
     }
 
     const sorted = [...steps].sort((a, b) => a.orderIndex - b.orderIndex);

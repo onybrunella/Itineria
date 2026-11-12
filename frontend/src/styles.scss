@@ -7,35 +7,7 @@
   --font-body: 'Nunito', system-ui, sans-serif;
   --font-note: 'Caveat', cursive;
 
-  /* Prairie + jaune soleil */
-  --color-paper: #f6f1e3;
-  --color-sand: #bfdde6;
-  --color-ink: #3e4a3d;
-  --color-heading: #5b8266;
-  --color-button: #5b8266;
-  --color-button-text: #f6f1e3;
-  --color-link: #5b8266;
-  --color-accent: #a8c3a0;
-  --color-selected: #f4d58d;
-  --color-pill: #f4d58d;
-  --color-route: #bfdde6;
-}
-
-html[data-theme='soleil'] {
-  --color-paper: #f6f1e3;
-  --color-sand: #bfdde6;
-  --color-ink: #3e4a3d;
-  --color-heading: #5b8266;
-  --color-button: #5b8266;
-  --color-button-text: #f6f1e3;
-  --color-link: #5b8266;
-  --color-accent: #a8c3a0;
-  --color-selected: #f4d58d;
-  --color-pill: #f4d58d;
-  --color-route: #bfdde6;
-}
-
-html[data-theme='cacao'] {
+  /* Côte, jaune soleil et cacao */
   --color-paper: #f7ebd8;
   --color-sand: #e8b4b8;
   --color-ink: #5c3d3b;
@@ -47,6 +19,21 @@ html[data-theme='cacao'] {
   --color-selected: #d98c6a;
   --color-pill: #d98c6a;
   --color-route: #f4d58d;
+
+  /*
+    Ancienne palette Prairie + jaune soleil (au cas où) :
+    --color-paper: #f6f1e3;
+    --color-sand: #bfdde6;
+    --color-ink: #3e4a3d;
+    --color-heading: #5b8266;
+    --color-button: #5b8266;
+    --color-button-text: #f6f1e3;
+    --color-link: #5b8266;
+    --color-accent: #a8c3a0;
+    --color-selected: #f4d58d;
+    --color-pill: #f4d58d;
+    --color-route: #bfdde6;
+  */
 }
 
 *,

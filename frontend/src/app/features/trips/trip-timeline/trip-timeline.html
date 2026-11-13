@@ -1,5 +1,11 @@
 @for (step of sortedSteps(); track step.id) {
-  <button type="button" class="step" [class.is-selected]="step.id === selectedId()" (click)="onSelect(step)">
+  <button
+    type="button"
+    class="step"
+    [class.is-selected]="step.id === selectedId()"
+    [attr.aria-current]="step.id === selectedId() ? 'true' : null"
+    (click)="onSelect(step)"
+  >
     <h3>{{ step.locationName }}</h3>
     <p>{{ step.date }}</p>
     <p class="note">{{ step.note }}</p>

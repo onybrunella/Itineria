@@ -30,10 +30,13 @@
     </button>
   </div>
 }
+<a class="skip-link" href="#contenu">Aller au contenu</a>
 @if (auth.loggedIn()) {
-  <p class="session">
+  <header class="session">
     <button type="button" class="logout" (click)="logout()">Se déconnecter</button>
-  </p>
+  </header>
 }
-<router-outlet />
+<main id="contenu">
+  <router-outlet />
+</main>
 

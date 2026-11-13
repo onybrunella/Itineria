@@ -1,5 +1,6 @@
 import { Component, computed, OnDestroy, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 import { TripService } from '../../../core/services/trip';
 import { StepService } from '../../../core/services/step';
 import { Trip } from '../../../core/models/trip';
@@ -50,12 +51,16 @@ export class TripReplay implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private tripService: TripService,
     private stepService: StepService,
+    private title: Title,
   ) {}
 
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.tripService.getTrip(id).subscribe({
-      next: (data) => this.trip.set(data),
+      next: (data) => {
+        this.trip.set(data);
+        this.title.setTitle(`${data.title} — replay — Itineria`);
+      },
       error: (err) => console.error('Erreur chargement du voyage', err),
     });
     this.stepService.getSteps(id).subscribe({

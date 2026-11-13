@@ -4,8 +4,14 @@
   </p>
   <h1>{{ t.title }}</h1>
 
-  @if (steps().length === 0) {
-    <p>Aucune étape à rejouer.</p>
+  @if (!stepsLoaded()) {
+    <p>Chargement des étapes...</p>
+  } @else if (steps().length === 0) {
+    <div class="empty">
+      <p class="note">Rien à rejouer pour l'instant.</p>
+      <p>Ajoute au moins une étape pour lancer la lecture.</p>
+      <a [routerLink]="['/trips', t.id, 'steps', 'new']">Ajouter une étape</a>
+    </div>
   } @else if (finished()) {
     <h2>Voyage terminé</h2>
     @if (stats(); as s) {

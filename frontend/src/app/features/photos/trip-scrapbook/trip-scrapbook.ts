@@ -22,6 +22,7 @@ interface ScrapbookPage {
 export class TripScrapbook implements OnInit, OnDestroy {
   trip = signal<Trip | null>(null);
   pages = signal<ScrapbookPage[]>([]);
+  pagesLoaded = signal(false);
 
   constructor(
     private route: ActivatedRoute,
@@ -38,7 +39,10 @@ export class TripScrapbook implements OnInit, OnDestroy {
     });
     this.stepService.getSteps(id).subscribe({
       next: (data) => this.loadPages([...data].sort((a, b) => a.orderIndex - b.orderIndex)),
-      error: (err) => console.error('Erreur chargement des etapes', err),
+      error: (err) => {
+        console.error('Erreur chargement des etapes', err);
+        this.pagesLoaded.set(true);
+      },
     });
   }
 
@@ -50,6 +54,7 @@ export class TripScrapbook implements OnInit, OnDestroy {
     this.revokeAll();
     if (steps.length === 0) {
       this.pages.set([]);
+      this.pagesLoaded.set(true);
       return;
     }
 
@@ -72,9 +77,13 @@ export class TripScrapbook implements OnInit, OnDestroy {
     forkJoin(pageLoads).subscribe({
       next: (pages) => {
         this.pages.set(pages);
+        this.pagesLoaded.set(true);
         this.scrollToFragment();
       },
-      error: (err) => console.error('Erreur chargement du carnet', err),
+      error: (err) => {
+        console.error('Erreur chargement du carnet', err);
+        this.pagesLoaded.set(true);
+      },
     });
   }
 

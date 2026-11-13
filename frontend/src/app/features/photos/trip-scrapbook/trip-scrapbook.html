@@ -2,25 +2,41 @@
   <a [routerLink]="['/trips', t.id]">← Retour au voyage</a>
   <h1>{{ t.title }}</h1>
 
-  @for (page of pages(); track page.step.id) {
-    <section [id]="'step-' + page.step.id">
-      <h2>{{ page.step.locationName }}</h2>
-      <p>{{ page.step.date }}</p>
-      <p class="note">{{ page.step.note }}</p>
-      <p>
-        <a [routerLink]="['/trips', t.id]" [queryParams]="{ step: page.step.id }">
-          Voir sur la carte
-        </a>
-      </p>
+  @if (!pagesLoaded()) {
+    <p>Chargement du carnet...</p>
+  } @else if (pages().length === 0) {
+    <div class="empty">
+      <p class="note">Le carnet est vide.</p>
+      <p>Ajoute une étape, puis des photos, pour remplir ces pages.</p>
+      <a [routerLink]="['/trips', t.id, 'steps', 'new']">Ajouter une étape</a>
+    </div>
+  } @else {
+    @for (page of pages(); track page.step.id) {
+      <section [id]="'step-' + page.step.id">
+        <h2>{{ page.step.locationName }}</h2>
+        <p>{{ page.step.date }}</p>
+        <p class="note">{{ page.step.note }}</p>
+        <p>
+          <a [routerLink]="['/trips', t.id]" [queryParams]="{ step: page.step.id }">
+            Voir sur la carte
+          </a>
+        </p>
 
-      @for (src of page.imageUrls; track src) {
-        <img [src]="src" alt="" />
-      } @empty {
-        <p>Pas de photo pour cette étape.</p>
-      }
-    </section>
-  } @empty {
-    <p>Aucune étape.</p>
+        @if (page.imageUrls.length === 0) {
+          <div class="empty">
+            <p class="note">Pas encore de photo pour cette étape.</p>
+            <p>Retourne au voyage pour en ajouter une.</p>
+            <a [routerLink]="['/trips', t.id]" [queryParams]="{ step: page.step.id }">
+              Ajouter une photo
+            </a>
+          </div>
+        } @else {
+          @for (src of page.imageUrls; track src) {
+            <img [src]="src" alt="" />
+          }
+        }
+      </section>
+    }
   }
 } @else {
   <p>Chargement du carnet...</p>

@@ -1,14 +1,24 @@
 <h1>Mes voyages</h1>
 
-<a routerLink="/trips/new">Nouveau voyage</a>
+@if (!loaded()) {
+  <p>Chargement des voyages...</p>
+} @else if (trips().length === 0) {
+  <div class="empty">
+    <p class="note">Ton carnet est encore vide.</p>
+    <p>Crée un premier voyage pour poser tes étapes et tes photos.</p>
+    <a routerLink="/trips/new">Nouveau voyage</a>
+  </div>
+} @else {
+  <p>
+    <a routerLink="/trips/new">Nouveau voyage</a>
+  </p>
 
-@for (trip of trips(); track trip.id) {
-  <a [routerLink]="['/trips', trip.id]">
-    <h2>{{ trip.title }}</h2>
-    <p class="note">{{ trip.description }}</p>
-    <p>{{ trip.startDate }} → {{ trip.endDate }}</p>
-    <span class="status">{{ trip.status }}</span>
-  </a>
-} @empty {
-  <p>Aucun voyage pour le moment.</p>
+  @for (trip of trips(); track trip.id) {
+    <a [routerLink]="['/trips', trip.id]">
+      <h2>{{ trip.title }}</h2>
+      <p class="note">{{ trip.description }}</p>
+      <p>{{ trip.startDate }} → {{ trip.endDate }}</p>
+      <span class="status">{{ trip.status }}</span>
+    </a>
+  }
 }

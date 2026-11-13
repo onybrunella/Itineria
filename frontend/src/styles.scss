@@ -44,16 +44,21 @@
 
 html {
   color-scheme: light;
+  overflow-x: clip;
 }
 
 body {
   margin: 0 auto;
   max-width: var(--content);
   padding: 1.5rem;
+  padding-left: max(1.5rem, env(safe-area-inset-left));
+  padding-right: max(1.5rem, env(safe-area-inset-right));
+  padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
   background: var(--color-paper);
   color: var(--color-ink);
   font-family: var(--font-body);
   line-height: 1.5;
+  overflow-x: clip;
 }
 
 h1,
@@ -63,6 +68,7 @@ h3 {
   font-weight: 700;
   line-height: 1.25;
   color: var(--color-heading);
+  overflow-wrap: anywhere;
 }
 
 a {
@@ -132,7 +138,43 @@ form {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  width: 100%;
   max-width: 22rem;
+}
+
+form input,
+form textarea,
+form select,
+form button {
+  width: 100%;
+  max-width: 100%;
+}
+
+.nav-links,
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem 0.85rem;
+}
+
+.session {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0 0 0.75rem;
+}
+
+.logout {
+  background: transparent;
+  color: var(--color-ink);
+  font-size: 0.9rem;
+  padding: 0.35rem 0.55rem;
+  text-decoration: underline;
+}
+
+.logout:hover {
+  background: var(--color-sand);
+  color: var(--color-ink);
 }
 
 img {
@@ -295,4 +337,31 @@ img {
 .leaflet-popup-close-button {
   color: #333;
   background: #fff;
+}
+
+@media (max-width: 40rem) {
+  body {
+    padding: 0.9rem;
+    padding-left: max(0.9rem, env(safe-area-inset-left));
+    padding-right: max(0.9rem, env(safe-area-inset-right));
+    padding-bottom: max(0.9rem, env(safe-area-inset-bottom));
+  }
+
+  h1 {
+    font-size: 1.65rem;
+  }
+
+  button,
+  .empty a,
+  .nav-links a {
+    min-height: 2.75rem;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .toast {
+    right: 0.75rem;
+    bottom: max(0.75rem, env(safe-area-inset-bottom));
+    width: calc(100vw - 1.5rem);
+  }
 }

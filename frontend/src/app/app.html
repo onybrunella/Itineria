@@ -30,4 +30,10 @@
     </button>
   </div>
 }
+@if (auth.loggedIn()) {
+  <p class="session">
+    <button type="button" class="logout" (click)="logout()">Se déconnecter</button>
+  </p>
+}
 <router-outlet />
+

@@ -1,9 +1,7 @@
 @if (trip(); as t) {
-  <p>
+  <p class="nav-links">
     <a routerLink="/trips">← Mes voyages</a>
-    ·
     <a [routerLink]="['/trips', t.id, 'scrapbook']">Voir le carnet</a>
-    ·
     <a [routerLink]="['/trips', t.id, 'replay']">Rejouer le voyage</a>
   </p>
   <h1>{{ t.title }}</h1>
@@ -27,11 +25,9 @@
     />
 
     <h2>Étapes</h2>
-    <p>
+    <p class="nav-links">
       <a [routerLink]="['/trips', t.id, 'steps', 'new']">Ajouter une étape</a>
-      ·
       <a [routerLink]="['/trips', t.id, 'scrapbook']">Voir le carnet</a>
-      ·
       <a [routerLink]="['/trips', t.id, 'replay']">Rejouer le voyage</a>
     </p>
 

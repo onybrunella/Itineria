@@ -4,7 +4,7 @@
   <input type="file" accept="image/jpeg,image/png,image/webp" (change)="onFileChosen($event)" />
 
   @if (previewUrl()) {
-    <img [src]="previewUrl()!" alt="Aperçu" width="200" />
+    <img [src]="previewUrl()!" alt="Aperçu" />
   }
 
   <button type="button" [disabled]="!selectedFile()" (click)="upload()">Envoyer</button>
@@ -13,7 +13,7 @@
     <p class="note">Pas encore de photo pour cette étape.</p>
   } @else {
     @for (src of imageUrls(); track src) {
-      <img [src]="src" alt="Photo" width="200" />
+      <img [src]="src" alt="Photo" />
     }
   }
 } @else {

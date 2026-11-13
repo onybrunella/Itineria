@@ -37,7 +37,7 @@
       <p>{{ index() + 1 }} / {{ steps().length }}</p>
     }
 
-    <p>
+    <p class="actions">
       @if (playing()) {
         <button type="button" (click)="pause()">Pause</button>
       } @else {

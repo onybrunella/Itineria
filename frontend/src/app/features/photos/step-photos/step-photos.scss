@@ -1,5 +1,11 @@
 img {
   display: block;
-  max-width: 200px;
+  width: 100%;
+  max-width: 20rem;
+  height: auto;
   margin: 0.5rem 0;
+}
+
+input[type='file'] {
+  max-width: 100%;
 }

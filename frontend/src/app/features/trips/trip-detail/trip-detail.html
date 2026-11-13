@@ -1,6 +1,7 @@
 @if (trip(); as t) {
   <nav class="nav-links" aria-label="Navigation du voyage">
     <a routerLink="/trips">← Mes voyages</a>
+    <a [routerLink]="['/trips', t.id, 'edit']">Modifier le carnet</a>
     <a [routerLink]="['/trips', t.id, 'scrapbook']">Voir le carnet</a>
     <a [routerLink]="['/trips', t.id, 'replay']">Rejouer le voyage</a>
   </nav>

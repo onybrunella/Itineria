@@ -15,6 +15,7 @@ export const routes: Routes = [
   { path: 'register', component: Register, title: 'Inscription — Itineria' },
   { path: 'trips', component: TripList, canActivate: [authGuard], title: 'Mes voyages — Itineria' },
   { path: 'trips/new', component: TripForm, canActivate: [authGuard], title: 'Nouveau voyage — Itineria' },
+  { path: 'trips/:id/edit', component: TripForm, canActivate: [authGuard], title: 'Modifier le voyage — Itineria' },
   { path: 'trips/:id/steps/new', component: StepForm, canActivate: [authGuard], title: 'Nouvelle étape — Itineria' },
   { path: 'trips/:id/scrapbook', component: TripScrapbook, canActivate: [authGuard], title: 'Carnet — Itineria' },
   { path: 'trips/:id/replay', component: TripReplay, canActivate: [authGuard], title: 'Replay — Itineria' },

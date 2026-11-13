@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 import { forkJoin, of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { TripService } from '../../../core/services/trip';
@@ -29,12 +30,16 @@ export class TripScrapbook implements OnInit, OnDestroy {
     private tripService: TripService,
     private stepService: StepService,
     private photoService: PhotoService,
+    private title: Title,
   ) {}
 
   ngOnInit() {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.tripService.getTrip(id).subscribe({
-      next: (data) => this.trip.set(data),
+      next: (data) => {
+        this.trip.set(data);
+        this.title.setTitle(`${data.title} — carnet — Itineria`);
+      },
       error: (err) => console.error('Erreur chargement du voyage', err),
     });
     this.stepService.getSteps(id).subscribe({

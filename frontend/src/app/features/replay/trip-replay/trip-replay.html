@@ -35,10 +35,12 @@
     />
 
     @if (currentStep(); as step) {
-      <h2>{{ step.locationName }}</h2>
-      <p>{{ step.date }}</p>
-      <p class="note">{{ step.note }}</p>
-      <p>{{ index() + 1 }} / {{ steps().length }}</p>
+      <div aria-live="polite">
+        <h2>{{ step.locationName }}</h2>
+        <p>{{ step.date }}</p>
+        <p class="note">{{ step.note }}</p>
+        <p>{{ index() + 1 }} / {{ steps().length }}</p>
+      </div>
     }
 
     <p class="actions">

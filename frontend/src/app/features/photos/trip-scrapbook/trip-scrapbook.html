@@ -38,7 +38,7 @@
           </div>
         } @else {
           @for (src of page.imageUrls; track src) {
-            <img [src]="src" alt="" />
+            <img [src]="src" [alt]="'Photo de ' + page.step.locationName" />
           }
         }
       </section>

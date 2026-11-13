@@ -1,7 +1,10 @@
 @if (stepId(); as id) {
   <h3>Photos de cette étape</h3>
 
-  <input type="file" accept="image/jpeg,image/png,image/webp" (change)="onFileChosen($event)" />
+  <label>
+    Choisir une photo
+    <input type="file" accept="image/jpeg,image/png,image/webp" (change)="onFileChosen($event)" />
+  </label>
 
   @if (previewUrl()) {
     <img [src]="previewUrl()!" alt="Aperçu" />
@@ -17,7 +20,7 @@
     <p class="note">Pas encore de photo pour cette étape.</p>
   } @else {
     @for (src of imageUrls(); track src) {
-      <img [src]="src" alt="Photo" />
+      <img [src]="src" alt="Photo de l'étape" />
     }
   }
 } @else {

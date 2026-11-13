@@ -1,13 +1,13 @@
 @if (trip(); as t) {
-  <p class="nav-links">
+  <nav class="nav-links" aria-label="Navigation du voyage">
     <a routerLink="/trips">← Mes voyages</a>
     <a [routerLink]="['/trips', t.id, 'scrapbook']">Voir le carnet</a>
     <a [routerLink]="['/trips', t.id, 'replay']">Rejouer le voyage</a>
-  </p>
+  </nav>
   <h1>{{ t.title }}</h1>
   <p class="note">{{ t.description }}</p>
   <p>{{ t.startDate }} → {{ t.endDate }}</p>
-  <span class="status">{{ t.status }}</span>
+  <span class="status"><span class="sr-only">Statut : </span>{{ t.status }}</span>
 
   @if (!stepsLoaded()) {
     <div class="skeleton" role="status" aria-label="Chargement des étapes">
@@ -30,11 +30,11 @@
     />
 
     <h2>Étapes</h2>
-    <p class="nav-links">
+    <nav class="nav-links" aria-label="Actions sur les étapes">
       <a [routerLink]="['/trips', t.id, 'steps', 'new']">Ajouter une étape</a>
       <a [routerLink]="['/trips', t.id, 'scrapbook']">Voir le carnet</a>
       <a [routerLink]="['/trips', t.id, 'replay']">Rejouer le voyage</a>
-    </p>
+    </nav>
 
     <app-trip-timeline
       [steps]="steps()"

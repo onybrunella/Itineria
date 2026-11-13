@@ -2,18 +2,39 @@
 <h1>Nouvelle étape</h1>
 
 <form (submit)="$event.preventDefault(); searchPlace()">
-  <input type="text" [formControl]="searchQuery" placeholder="Rechercher un lieu (Nominatim)" />
+  <label>
+    Rechercher un lieu
+    <input type="text" [formControl]="searchQuery" />
+  </label>
   <button type="submit">Rechercher</button>
 </form>
 
-@for (place of suggestions(); track place.display_name) {
-  <button type="button" (click)="selectPlace(place)">{{ place.display_name }}</button>
+@if (suggestions().length) {
+  <ul class="place-results">
+    @for (place of suggestions(); track place.display_name) {
+      <li>
+        <button type="button" (click)="selectPlace(place)">{{ place.display_name }}</button>
+      </li>
+    }
+  </ul>
 }
 
 <form [formGroup]="stepForm" (ngSubmit)="onSubmit()">
-  <input type="text" formControlName="locationName" placeholder="Nom du lieu" readonly />
-  <input type="date" formControlName="date" />
-  <textarea formControlName="note" placeholder="Note"></textarea>
-  <input type="number" formControlName="orderIndex" placeholder="Ordre" />
+  <label>
+    Nom du lieu
+    <input type="text" formControlName="locationName" readonly />
+  </label>
+  <label>
+    Date
+    <input type="date" formControlName="date" />
+  </label>
+  <label>
+    Note
+    <textarea formControlName="note"></textarea>
+  </label>
+  <label>
+    Ordre
+    <input type="number" formControlName="orderIndex" />
+  </label>
   <button type="submit" [disabled]="stepForm.invalid">Ajouter l'étape</button>
 </form>

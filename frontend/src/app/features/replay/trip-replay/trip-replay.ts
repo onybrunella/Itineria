@@ -17,6 +17,7 @@ const STEP_MS = 2000;
 export class TripReplay implements OnInit, OnDestroy {
   trip = signal<Trip | null>(null);
   steps = signal<Step[]>([]);
+  stepsLoaded = signal(false);
   index = signal(0);
   playing = signal(false);
   finished = signal(false);
@@ -58,8 +59,14 @@ export class TripReplay implements OnInit, OnDestroy {
       error: (err) => console.error('Erreur chargement du voyage', err),
     });
     this.stepService.getSteps(id).subscribe({
-      next: (data) => this.steps.set([...data].sort((a, b) => a.orderIndex - b.orderIndex)),
-      error: (err) => console.error('Erreur chargement des etapes', err),
+      next: (data) => {
+        this.steps.set([...data].sort((a, b) => a.orderIndex - b.orderIndex));
+        this.stepsLoaded.set(true);
+      },
+      error: (err) => {
+        console.error('Erreur chargement des etapes', err);
+        this.stepsLoaded.set(true);
+      },
     });
   }
 

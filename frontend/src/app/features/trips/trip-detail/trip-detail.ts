@@ -17,6 +17,7 @@ import { StepPhotos } from '../../photos/step-photos/step-photos';
 export class TripDetail implements OnInit {
   trip = signal<Trip | null>(null);
   steps = signal<Step[]>([]);
+  stepsLoaded = signal(false);
   selectedStep = signal<Step | null>(null);
 
   constructor(
@@ -34,9 +35,13 @@ export class TripDetail implements OnInit {
     this.stepService.getSteps(id).subscribe({
       next: (data) => {
         this.steps.set(data);
+        this.stepsLoaded.set(true);
         this.selectFromQuery(data);
       },
-      error: (err) => console.error('Erreur chargement des etapes', err),
+      error: (err) => {
+        console.error('Erreur chargement des etapes', err);
+        this.stepsLoaded.set(true);
+      },
     });
   }
 

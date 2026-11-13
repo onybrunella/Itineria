@@ -11,13 +11,20 @@ import { Trip } from '../../../core/models/trip';
 })
 export class TripList implements OnInit {
   trips = signal<Trip[]>([]);
+  loaded = signal(false);
 
   constructor(private tripService: TripService) {}
 
   ngOnInit() {
     this.tripService.getTrips().subscribe({
-      next: (data) => this.trips.set(data),
-      error: (err) => console.error('Erreur chargement voyages', err),
+      next: (data) => {
+        this.trips.set(data);
+        this.loaded.set(true);
+      },
+      error: (err) => {
+        console.error('Erreur chargement voyages', err);
+        this.loaded.set(true);
+      },
     });
   }
 }

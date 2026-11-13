@@ -1,21 +1,24 @@
 @if (stepId(); as id) {
-<h3>Photos de cette étape</h3>
+  <h3>Photos de cette étape</h3>
 
-<input type="file" accept="image/jpeg,image/png,image/webp" (change)="onFileChosen($event)" />
+  <input type="file" accept="image/jpeg,image/png,image/webp" (change)="onFileChosen($event)" />
 
-@if (previewUrl()) {
-<img [src]="previewUrl()!" alt="Aperçu" width="200" />
-}
+  @if (previewUrl()) {
+    <img [src]="previewUrl()!" alt="Aperçu" width="200" />
+  }
 
-<button type="button" [disabled]="!selectedFile()" (click)="upload()">
-  Envoyer
-</button>
+  <button type="button" [disabled]="!selectedFile()" (click)="upload()">Envoyer</button>
 
-@for (src of imageUrls(); track src) {
-<img [src]="src" alt="Photo" width="200" />
-} @empty {
-<p>Aucune photo pour le moment.</p>
-}
+  @if (imageUrls().length === 0) {
+    <p class="note">Pas encore de photo pour cette étape.</p>
+  } @else {
+    @for (src of imageUrls(); track src) {
+      <img [src]="src" alt="Photo" width="200" />
+    }
+  }
 } @else {
-<p>Clique une étape pour ajouter des photos.</p>
+  <div class="empty">
+    <p class="note">Aucune étape sélectionnée.</p>
+    <p>Clique une étape sur la carte ou dans la liste pour ajouter des photos.</p>
+  </div>
 }

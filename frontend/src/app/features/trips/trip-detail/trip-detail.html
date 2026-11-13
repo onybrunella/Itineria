@@ -11,35 +11,45 @@
   <p>{{ t.startDate }} → {{ t.endDate }}</p>
   <span class="status">{{ t.status }}</span>
 
-  <app-trip-map
-    [steps]="steps()"
-    [selectedStep]="selectedStep()"
-    (stepSelect)="onSelectStep($event)"
-  />
+  @if (!stepsLoaded()) {
+    <p>Chargement des étapes...</p>
+  } @else if (steps().length === 0) {
+    <div class="empty">
+      <p class="note">Ce voyage n'a pas encore d'étape.</p>
+      <p>Ajoute un lieu pour le voir sur la carte et dans le carnet.</p>
+      <a [routerLink]="['/trips', t.id, 'steps', 'new']">Ajouter une étape</a>
+    </div>
+  } @else {
+    <app-trip-map
+      [steps]="steps()"
+      [selectedStep]="selectedStep()"
+      (stepSelect)="onSelectStep($event)"
+    />
 
-  <h2>Étapes</h2>
-  <p>
-    <a [routerLink]="['/trips', t.id, 'steps', 'new']">Ajouter une étape</a>
-    ·
-    <a [routerLink]="['/trips', t.id, 'scrapbook']">Voir le carnet</a>
-    ·
-    <a [routerLink]="['/trips', t.id, 'replay']">Rejouer le voyage</a>
-  </p>
-
-  <app-trip-timeline
-    [steps]="steps()"
-    [selectedId]="selectedStep()?.id ?? null"
-    (stepSelect)="onSelectStep($event)"
-  />
-
-  <app-step-photos [stepId]="selectedStep()?.id ?? null" />
-
-  @if (selectedStep(); as s) {
+    <h2>Étapes</h2>
     <p>
-      <a [routerLink]="['/trips', t.id, 'scrapbook']" [fragment]="'step-' + s.id">
-        Voir cette étape dans le carnet
-      </a>
+      <a [routerLink]="['/trips', t.id, 'steps', 'new']">Ajouter une étape</a>
+      ·
+      <a [routerLink]="['/trips', t.id, 'scrapbook']">Voir le carnet</a>
+      ·
+      <a [routerLink]="['/trips', t.id, 'replay']">Rejouer le voyage</a>
     </p>
+
+    <app-trip-timeline
+      [steps]="steps()"
+      [selectedId]="selectedStep()?.id ?? null"
+      (stepSelect)="onSelectStep($event)"
+    />
+
+    <app-step-photos [stepId]="selectedStep()?.id ?? null" />
+
+    @if (selectedStep(); as s) {
+      <p>
+        <a [routerLink]="['/trips', t.id, 'scrapbook']" [fragment]="'step-' + s.id">
+          Voir cette étape dans le carnet
+        </a>
+      </p>
+    }
   }
 } @else {
   <p>Chargement du voyage...</p>

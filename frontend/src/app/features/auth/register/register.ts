@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Auth } from '../../../core/services/auth';
+import { Toast } from '../../../core/services/toast';
 import {Router, RouterLink} from '@angular/router';
 
 @Component({
@@ -10,8 +11,7 @@ import {Router, RouterLink} from '@angular/router';
   styleUrl: './register.scss',
 })
 export class Register {
-    errorMessage = '';
-  constructor(private auth: Auth, private router:Router){}
+  constructor(private auth: Auth, private router: Router, private toast: Toast) {}
     registerForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(8)]),
@@ -25,10 +25,11 @@ export class Register {
     const pseudo=this.registerForm.value.pseudo;
     if (email && password && pseudo) {
       this.auth.register(email!, password!, pseudo!).subscribe({
-        next: (response) => {
+        next: () => {
+          this.toast.success('Compte créé, connecte-toi');
           this.router.navigate(['/login']);
         },
-        error: () => this.errorMessage = "Inscription impossible (email déjà utilisé ?)"
+        error: () => this.toast.error('Inscription impossible (email déjà utilisé ?)'),
 
       });
     }

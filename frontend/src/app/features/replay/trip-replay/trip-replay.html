@@ -5,7 +5,11 @@
   <h1>{{ t.title }}</h1>
 
   @if (!stepsLoaded()) {
-    <p>Chargement des étapes...</p>
+    <div class="skeleton" role="status" aria-label="Chargement du replay">
+      <div class="skeleton-map"></div>
+      <div class="skeleton-title"></div>
+      <div class="skeleton-line"></div>
+    </div>
   } @else if (steps().length === 0) {
     <div class="empty">
       <p class="note">Rien à rejouer pour l'instant.</p>
@@ -47,5 +51,8 @@
     </p>
   }
 } @else {
-  <p>Chargement du replay...</p>
+  <div class="skeleton" role="status" aria-label="Chargement du replay">
+    <div class="skeleton-title"></div>
+    <div class="skeleton-map"></div>
+  </div>
 }

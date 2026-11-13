@@ -1,7 +1,11 @@
 <h1>Mes voyages</h1>
 
 @if (!loaded()) {
-  <p>Chargement des voyages...</p>
+  <div class="skeleton" role="status" aria-label="Chargement des voyages">
+    <div class="skeleton-card"></div>
+    <div class="skeleton-card"></div>
+    <div class="skeleton-card"></div>
+  </div>
 } @else if (trips().length === 0) {
   <div class="empty">
     <p class="note">Ton carnet est encore vide.</p>

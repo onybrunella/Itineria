@@ -15,6 +15,7 @@ export class StepPhotos implements OnDestroy {
   selectedFile = signal<File | null>(null);
   previewUrl = signal<string | null>(null);
   imageUrls = signal<string[]>([]);
+  photosLoaded = signal(false);
 
   constructor(
     private photoService: PhotoService,
@@ -26,6 +27,7 @@ export class StepPhotos implements OnDestroy {
         this.resetPreview();
         this.revokeImages();
         this.imageUrls.set([]);
+        this.photosLoaded.set(false);
         if (id != null) {
           this.loadPhotos(id);
         }
@@ -69,17 +71,25 @@ export class StepPhotos implements OnDestroy {
         if (photos.length === 0) {
           this.revokeImages();
           this.imageUrls.set([]);
+          this.photosLoaded.set(true);
           return;
         }
         forkJoin(photos.map((photo) => this.photoService.getPhotoFile(stepId, photo.id))).subscribe({
           next: (blobs) => {
             this.revokeImages();
             this.imageUrls.set(blobs.map((blob) => URL.createObjectURL(blob)));
+            this.photosLoaded.set(true);
           },
-          error: (err) => console.error('Erreur chargement des fichiers photo', err),
+          error: (err) => {
+            console.error('Erreur chargement des fichiers photo', err);
+            this.photosLoaded.set(true);
+          },
         });
       },
-      error: (err) => console.error('Erreur chargement des photos', err),
+      error: (err) => {
+        console.error('Erreur chargement des photos', err);
+        this.photosLoaded.set(true);
+      },
     });
   }
 

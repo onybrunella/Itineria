@@ -10,7 +10,12 @@
   <span class="status">{{ t.status }}</span>
 
   @if (!stepsLoaded()) {
-    <p>Chargement des étapes...</p>
+    <div class="skeleton" role="status" aria-label="Chargement des étapes">
+      <div class="skeleton-map"></div>
+      <div class="skeleton-title"></div>
+      <div class="skeleton-line"></div>
+      <div class="skeleton-line short"></div>
+    </div>
   } @else if (steps().length === 0) {
     <div class="empty">
       <p class="note">Ce voyage n'a pas encore d'étape.</p>
@@ -48,5 +53,9 @@
     }
   }
 } @else {
-  <p>Chargement du voyage...</p>
+  <div class="skeleton" role="status" aria-label="Chargement du voyage">
+    <div class="skeleton-title"></div>
+    <div class="skeleton-line"></div>
+    <div class="skeleton-map"></div>
+  </div>
 }

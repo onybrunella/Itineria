@@ -3,7 +3,13 @@
   <h1>{{ t.title }}</h1>
 
   @if (!pagesLoaded()) {
-    <p>Chargement du carnet...</p>
+    <div class="skeleton" role="status" aria-label="Chargement du carnet">
+      <div class="skeleton-title"></div>
+      <div class="skeleton-line"></div>
+      <div class="skeleton-photo"></div>
+      <div class="skeleton-title"></div>
+      <div class="skeleton-photo"></div>
+    </div>
   } @else if (pages().length === 0) {
     <div class="empty">
       <p class="note">Le carnet est vide.</p>
@@ -39,5 +45,8 @@
     }
   }
 } @else {
-  <p>Chargement du carnet...</p>
+  <div class="skeleton" role="status" aria-label="Chargement du carnet">
+    <div class="skeleton-title"></div>
+    <div class="skeleton-photo"></div>
+  </div>
 }

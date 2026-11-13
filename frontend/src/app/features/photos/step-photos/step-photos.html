@@ -9,7 +9,11 @@
 
   <button type="button" [disabled]="!selectedFile()" (click)="upload()">Envoyer</button>
 
-  @if (imageUrls().length === 0) {
+  @if (!photosLoaded()) {
+    <div class="skeleton" role="status" aria-label="Chargement des photos">
+      <div class="skeleton-photo"></div>
+    </div>
+  } @else if (imageUrls().length === 0) {
     <p class="note">Pas encore de photo pour cette étape.</p>
   } @else {
     @for (src of imageUrls(); track src) {

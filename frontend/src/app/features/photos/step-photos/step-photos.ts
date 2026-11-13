@@ -1,6 +1,7 @@
 import { Component, effect, input, OnDestroy, signal, untracked } from '@angular/core';
 import { forkJoin } from 'rxjs';
 import { PhotoService } from '../../../core/services/photo';
+import { Toast } from '../../../core/services/toast';
 
 @Component({
   selector: 'app-step-photos',
@@ -15,7 +16,10 @@ export class StepPhotos implements OnDestroy {
   previewUrl = signal<string | null>(null);
   imageUrls = signal<string[]>([]);
 
-  constructor(private photoService: PhotoService) {
+  constructor(
+    private photoService: PhotoService,
+    private toast: Toast,
+  ) {
     effect(() => {
       const id = this.stepId();
       untracked(() => {
@@ -48,8 +52,9 @@ export class StepPhotos implements OnDestroy {
       next: () => {
         this.resetPreview();
         this.loadPhotos(stepId);
+        this.toast.success('Photo envoyée');
       },
-      error: (err) => console.error('Erreur upload photo', err),
+      error: () => this.toast.error("Impossible d'envoyer la photo"),
     });
   }
 

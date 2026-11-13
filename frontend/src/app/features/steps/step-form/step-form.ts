@@ -3,6 +3,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { StepService } from '../../../core/services/step';
+import { Toast } from '../../../core/services/toast';
 import { CreateStepRequest } from '../../../core/models/step';
 
 interface NominatimPlace {
@@ -37,6 +38,7 @@ export class StepForm implements OnInit {
     private router: Router,
     private http: HttpClient,
     private stepService: StepService,
+    private toast: Toast,
   ) {}
 
   ngOnInit() {
@@ -58,7 +60,7 @@ export class StepForm implements OnInit {
       })
       .subscribe({
         next: (places) => this.suggestions.set(places),
-        error: (err) => console.error('Erreur recherche Nominatim', err),
+        error: () => this.toast.error('Recherche de lieu impossible'),
       });
   }
 
@@ -74,8 +76,11 @@ export class StepForm implements OnInit {
   onSubmit() {
     if (this.stepForm.invalid) return;
     this.stepService.createStep(this.tripId, this.stepForm.value as CreateStepRequest).subscribe({
-      next: () => this.router.navigate(['/trips', this.tripId]),
-      error: (err) => console.error("Erreur creation d'etape", err),
+      next: () => {
+        this.toast.success('Étape ajoutée');
+        this.router.navigate(['/trips', this.tripId]);
+      },
+      error: () => this.toast.error("Impossible d'ajouter l'étape"),
     });
   }
 }

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Auth } from '../../../core/services/auth';
+import { Toast } from '../../../core/services/toast';
 import {Router} from '@angular/router';
 
 @Component({
@@ -11,7 +12,7 @@ import {Router} from '@angular/router';
 })
 export class Login {
 
-  constructor(private auth: Auth, private router:Router){}
+  constructor(private auth: Auth, private router:Router, private toast: Toast){}
 
   loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -23,12 +24,11 @@ export class Login {
     const password=this.loginForm.value.password;
     if (email && password) {
       this.auth.login(email, password).subscribe({
-        next: (response) => {
-          console.log("Login : Connexion réussie!!", response);
+        next: () => {
           this.router.navigate(['/trips']);
         },
-        error:(err)=>{
-          console.log("Erreur de connexion", err);
+        error: () => {
+          this.toast.error('Email ou mot de passe incorrect');
         }
 
       });

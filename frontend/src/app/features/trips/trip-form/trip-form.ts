@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TripService } from '../../../core/services/trip';
+import { Toast } from '../../../core/services/toast';
 import { CreateTripRequest } from '../../../core/models/trip';
 
 @Component({
@@ -12,7 +13,11 @@ import { CreateTripRequest } from '../../../core/models/trip';
 })
 export class TripForm {
 
-  constructor(private tripService: TripService, private router: Router) {}
+  constructor(
+    private tripService: TripService,
+    private router: Router,
+    private toast: Toast,
+  ) {}
 
   tripForm = new FormGroup({
     title: new FormControl('', [Validators.required]),
@@ -25,8 +30,11 @@ export class TripForm {
   onSubmit() {
     if (this.tripForm.invalid) return;
     this.tripService.createTrip(this.tripForm.value as CreateTripRequest).subscribe({
-      next: () => this.router.navigate(['/trips']),
-      error: (err) => console.error('Erreur création voyage', err),
+      next: () => {
+        this.toast.success('Voyage créé');
+        this.router.navigate(['/trips']);
+      },
+      error: () => this.toast.error('Impossible de créer le voyage'),
     });
   }
 }

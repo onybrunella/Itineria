@@ -1,1 +1,33 @@
+@if (toast.text(); as text) {
+  <div
+    class="toast"
+    [class.is-error]="toast.kind() === 'error'"
+    [class.is-success]="toast.kind() === 'success'"
+    role="alert"
+    aria-live="assertive"
+  >
+    @if (toast.kind() === 'success') {
+      <svg class="toast-icon" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+        <path
+          d="M7 0.75A6.25 6.25 0 1 0 7 13.25 6.25 6.25 0 0 0 7 0.75Zm2.97 4.47-3.5 3.5a.75.75 0 0 1-1.06 0l-1.5-1.5a.75.75 0 0 1 1.06-1.06L6 6.94l2.97-2.97a.75.75 0 0 1 1.06 1.06Z"
+          fill="currentColor"
+        />
+      </svg>
+    } @else {
+      <svg class="toast-icon" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+        <path
+          d="M7 .75a6.25 6.25 0 1 0 0 12.5A6.25 6.25 0 0 0 7 .75Zm2.03 3.72a.75.75 0 0 1 0 1.06L8.06 7l.97.97a.75.75 0 1 1-1.06 1.06L7 8.06l-.97.97a.75.75 0 0 1-1.06-1.06L5.94 7l-.97-.97A.75.75 0 0 1 6.03 4.97L7 5.94l.97-.97a.75.75 0 0 1 1.06 0Z"
+          fill="currentColor"
+        />
+      </svg>
+    }
+    <div class="toast-copy">
+      <p class="toast-title">Itineria</p>
+      <p class="toast-detail">{{ text }}</p>
+    </div>
+    <button type="button" class="toast-close" (click)="toast.dismiss()" aria-label="Fermer">
+      ×
+    </button>
+  </div>
+}
 <router-outlet />

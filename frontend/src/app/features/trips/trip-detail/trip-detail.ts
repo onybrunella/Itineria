@@ -1,8 +1,9 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { TripService } from '../../../core/services/trip';
 import { StepService } from '../../../core/services/step';
+import { Toast } from '../../../core/services/toast';
 import { Trip } from '../../../core/models/trip';
 import { Step } from '../../../core/models/step';
 import { TripMap } from '../trip-map/trip-map';
@@ -20,11 +21,14 @@ export class TripDetail implements OnInit {
   steps = signal<Step[]>([]);
   stepsLoaded = signal(false);
   selectedStep = signal<Step | null>(null);
+  deleting = signal(false);
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private tripService: TripService,
     private stepService: StepService,
+    private toast: Toast,
     private title: Title,
   ) {}
 
@@ -52,6 +56,28 @@ export class TripDetail implements OnInit {
 
   onSelectStep(step: Step) {
     this.selectedStep.set(step);
+  }
+
+  deleteTrip() {
+    const t = this.trip();
+    if (!t || this.deleting()) {
+      return;
+    }
+    const ok = window.confirm(`Supprimer « ${t.title} » ? Les étapes et photos partent aussi.`);
+    if (!ok) {
+      return;
+    }
+    this.deleting.set(true);
+    this.tripService.deleteTrip(t.id).subscribe({
+      next: () => {
+        this.toast.success('Voyage supprimé');
+        this.router.navigate(['/trips']);
+      },
+      error: () => {
+        this.deleting.set(false);
+        this.toast.error('Impossible de supprimer le voyage');
+      },
+    });
   }
 
   private selectFromQuery(steps: Step[]) {

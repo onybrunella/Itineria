@@ -4,6 +4,9 @@
     <a [routerLink]="['/trips', t.id, 'edit']">Modifier le carnet</a>
     <a [routerLink]="['/trips', t.id, 'scrapbook']">Voir le carnet</a>
     <a [routerLink]="['/trips', t.id, 'replay']">Rejouer le voyage</a>
+    <button type="button" class="logout" (click)="deleteTrip()" [disabled]="deleting()">
+      {{ deleting() ? 'Suppression…' : 'Supprimer le voyage' }}
+    </button>
   </nav>
   <h1>{{ t.title }}</h1>
   <p class="note">{{ t.description }}</p>

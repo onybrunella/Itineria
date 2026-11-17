@@ -1,5 +1,5 @@
 <a [routerLink]="['/trips', tripId]">← Retour au voyage</a>
-<h1>Nouvelle étape</h1>
+<h1>{{ isEdit ? "Modifier l'étape" : 'Nouvelle étape' }}</h1>
 
 <form (submit)="$event.preventDefault(); searchPlace()">
   <label>
@@ -36,5 +36,7 @@
     Ordre
     <input type="number" formControlName="orderIndex" />
   </label>
-  <button type="submit" [disabled]="stepForm.invalid">Ajouter l'étape</button>
+  <button type="submit" [disabled]="stepForm.invalid">
+    {{ isEdit ? 'Enregistrer' : "Ajouter l'étape" }}
+  </button>
 </form>

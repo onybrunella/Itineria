@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.itineria.backend.dto.ItineraryResponse;
 import com.itineria.backend.dto.StepResponse;
 import com.itineria.backend.entity.Step;
-import com.itineria.backend.entity.Trip;
+//import com.itineria.backend.entity.Trip;
 import com.itineria.backend.entity.User;
 import com.itineria.backend.repository.StepRepository;
 import com.itineria.backend.util.DistanceUtils;

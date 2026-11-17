@@ -20,6 +20,7 @@ interface NominatimPlace {
 })
 export class StepForm implements OnInit {
   tripId = 0;
+  stepId: number | null = null;
   suggestions = signal<NominatimPlace[]>([]);
 
   searchQuery = new FormControl('', { nonNullable: true });
@@ -43,9 +44,31 @@ export class StepForm implements OnInit {
 
   ngOnInit() {
     this.tripId = Number(this.route.snapshot.paramMap.get('id'));
+    const rawStepId = this.route.snapshot.paramMap.get('stepId');
+    this.stepId = rawStepId ? Number(rawStepId) : null;
+
     this.stepService.getSteps(this.tripId).subscribe({
-      next: (steps) => this.stepForm.patchValue({ orderIndex: steps.length }),
-      error: (err) => console.error('Erreur chargement des etapes', err),
+      next: (steps) => {
+        if (this.stepId == null) {
+          this.stepForm.patchValue({ orderIndex: steps.length });
+          return;
+        }
+        const step = steps.find((s) => s.id === this.stepId);
+        if (!step) {
+          this.toast.error('Impossible de charger l\'étape');
+          this.router.navigate(['/trips', this.tripId]);
+          return;
+        }
+        this.stepForm.patchValue({
+          locationName: step.locationName,
+          latitude: step.latitude,
+          longitude: step.longitude,
+          date: step.date,
+          note: step.note,
+          orderIndex: step.orderIndex,
+        });
+      },
+      error: () => this.toast.error('Impossible de charger les étapes'),
     });
   }
 
@@ -75,12 +98,28 @@ export class StepForm implements OnInit {
 
   onSubmit() {
     if (this.stepForm.invalid) return;
-    this.stepService.createStep(this.tripId, this.stepForm.value as CreateStepRequest).subscribe({
+    const data = this.stepForm.value as CreateStepRequest;
+    const stepId = this.stepId;
+    if (stepId == null) {
+      this.stepService.createStep(this.tripId, data).subscribe({
+        next: () => {
+          this.toast.success('Étape ajoutée');
+          this.router.navigate(['/trips', this.tripId]);
+        },
+        error: () => this.toast.error("Impossible d'ajouter l'étape"),
+      });
+      return;
+    }
+    this.stepService.updateStep(this.tripId, stepId, data).subscribe({
       next: () => {
-        this.toast.success('Étape ajoutée');
+        this.toast.success('Étape modifiée');
         this.router.navigate(['/trips', this.tripId]);
       },
-      error: () => this.toast.error("Impossible d'ajouter l'étape"),
+      error: () => this.toast.error("Impossible de modifier l'étape"),
     });
+  }
+
+  get isEdit() {
+    return this.stepId !== null;
   }
 }

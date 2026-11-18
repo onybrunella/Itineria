@@ -53,6 +53,11 @@
         <a [routerLink]="['/trips', t.id, 'steps', s.id, 'edit']">Modifier cette étape</a>
       </p>
       <p>
+        <button type="button" class="logout" (click)="deleteStep()" [disabled]="deletingStep()">
+          {{ deletingStep() ? 'Suppression…' : 'Supprimer cette étape' }}
+        </button>
+      </p>
+      <p>
         <a [routerLink]="['/trips', t.id, 'scrapbook']" [fragment]="'step-' + s.id">
           Voir cette étape dans le carnet
         </a>

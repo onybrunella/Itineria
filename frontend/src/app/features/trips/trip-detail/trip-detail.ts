@@ -22,6 +22,7 @@ export class TripDetail implements OnInit {
   stepsLoaded = signal(false);
   selectedStep = signal<Step | null>(null);
   deleting = signal(false);
+  deletingStep = signal(false);
 
   constructor(
     private route: ActivatedRoute,
@@ -63,7 +64,7 @@ export class TripDetail implements OnInit {
     if (!t || this.deleting()) {
       return;
     }
-    const ok = window.confirm(`Supprimer « ${t.title} » ? Les étapes et photos partent aussi.`);
+    const ok = window.confirm(`Supprimer « ${t.title} » ? Les étapes et photos seront également supprimés.`);
     if (!ok) {
       return;
     }
@@ -78,6 +79,31 @@ export class TripDetail implements OnInit {
         this.toast.error('Impossible de supprimer le voyage');
       },
     });
+  }
+
+  deleteStep(){
+    const t = this.trip();
+    const s = this.selectedStep();
+    if (!t || !s || this.deletingStep()) {
+      return;
+    }
+    const ok = window.confirm(`Supprimer « ${s.locationName} » ?`);
+    if (!ok) {
+      return;
+    }
+    this.deletingStep.set(true);
+    this.stepService.deleteStep(t.id, s.id).subscribe({
+      next: () => {
+        this.toast.success('Étape supprimée');
+        this.steps.set(this.steps().filter((step) => step.id !== s.id));
+        this.selectedStep.set(null);
+        this.deletingStep.set(false);
+      },
+      error : () => {
+        this.deletingStep.set(false);
+        this.toast.error("Impossible de supprimer l'étape");
+      }
+    })
   }
 
   private selectFromQuery(steps: Step[]) {

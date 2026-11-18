@@ -6,6 +6,7 @@ import java.util.Objects;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.itineria.backend.dto.ItineraryResponse;
 import com.itineria.backend.dto.StepResponse;
@@ -13,19 +14,28 @@ import com.itineria.backend.entity.Step;
 //import com.itineria.backend.entity.Trip;
 import com.itineria.backend.entity.User;
 import com.itineria.backend.repository.StepRepository;
+import com.itineria.backend.repository.PhotoRepository;
 import com.itineria.backend.util.DistanceUtils;
+import com.itineria.backend.storage.FileStorage;
 
 @Service
 public class StepService {
 
     private final StepRepository stepRepository;
     private final TripService tripService;
+    private final PhotoRepository photoRepository;
+    private final FileStorage fileStorage;
 
-    public StepService(StepRepository stepRepository, TripService tripService) {
+    public StepService(StepRepository stepRepository, TripService tripService,
+        PhotoRepository photoRepository, FileStorage fileStorage) {
         Objects.requireNonNull(stepRepository);
         this.stepRepository = stepRepository;
         Objects.requireNonNull(tripService);
         this.tripService = tripService;
+        Objects.requireNonNull(photoRepository);
+        this.photoRepository = photoRepository;
+        Objects.requireNonNull(fileStorage);
+        this.fileStorage = fileStorage;
     }
 
     public Step createStep(Long tripId, User user, String locationName, Double latitude, Double longitude,
@@ -93,9 +103,19 @@ public class StepService {
         return stepRepository.save(step);
     }
 
-    public void deleteStep(Long stepId, User user) {
+    /*public void deleteStep(Long stepId, User user) {
         var step = getStep(stepId, user);
         stepRepository.delete(step);
+    }*/
+   @Transactional
+    public void deleteStep(Long stepId, User user) {
+    var step = getStep(stepId, user);
+    var photos = photoRepository.findByStep(step);
+    for (var photo : photos) {
+        fileStorage.delete(photo.getUrl());
+        photoRepository.delete(photo);
+    }
+    stepRepository.delete(step);
     }
 
     public double calculateTotalDistance(List<Step> steps) {
